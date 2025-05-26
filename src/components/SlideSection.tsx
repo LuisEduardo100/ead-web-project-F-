@@ -43,11 +43,12 @@ export function SlideSection() {
         spaceBetween={12}
         slidesPerView={1.2}
         breakpoints={{
-          640: { slidesPerView: 1.2 },
+          300: { slidesPerView: 1.0 },
+          460: { slidesPerView: 1.2 },
+          640: { slidesPerView: 1.6 },
           768: { slidesPerView: 2 },
           1024: { slidesPerView: 3 },
         }}
-        loop
         className="pb-8"
       >
         {courses.map((course) => (
