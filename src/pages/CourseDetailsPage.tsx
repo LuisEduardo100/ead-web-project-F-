@@ -5,10 +5,13 @@ import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import {
   favoriteCourse,
   getCourseDetails,
+  getCourseDetailsNoAuth,
   likeCourse,
   unfavoriteCourse,
   unlikeCourse,
 } from "../services/courseService";
+import { Header } from "../components/Header";
+import Button from "../components/common/Button";
 
 export default function CourseDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,11 +22,9 @@ export default function CourseDetailsPage() {
 
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [isFavorited, setIsFavorited] = useState<boolean>(false);
-  const [tokenExists, setTokenExists] = useState<boolean>(false);
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
-    setTokenExists(!!sessionStorage.getItem("token"));
-
     if (!id) {
       setError("ID do curso não fornecido!");
       setLoading(false);
@@ -33,7 +34,18 @@ export default function CourseDetailsPage() {
     const fetchDetails = async () => {
       try {
         setLoading(true);
-        const data = await getCourseDetails(id);
+        if (token) {
+          const data = await getCourseDetails(id);
+          if (data) {
+            setCourse(data);
+            setIsLiked(data.liked);
+            setIsFavorited(data.favorited);
+          } else {
+            setError("Curso não encontrado.");
+          }
+          return;
+        }
+        const data = await getCourseDetailsNoAuth(id);
         if (data) {
           setCourse(data);
           setIsLiked(data.liked);
@@ -55,8 +67,10 @@ export default function CourseDetailsPage() {
     fetchDetails();
   }, [id]);
 
+  console.log(course);
+
   const handleLikeClick = async () => {
-    if (!tokenExists) {
+    if (!token) {
       alert("Você precisa estar logado para curtir um curso!");
       return;
     }
@@ -71,7 +85,7 @@ export default function CourseDetailsPage() {
   };
 
   const handleFavoriteClick = async () => {
-    if (!tokenExists) {
+    if (!token) {
       alert("Você precisa estar logado para favoritar um curso!");
       return;
     }
@@ -88,7 +102,11 @@ export default function CourseDetailsPage() {
   };
 
   if (loading) {
-    return <LoadingSpinner size="large" />;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner size="large" />
+      </div>
+    );
   }
 
   if (error) {
@@ -100,58 +118,60 @@ export default function CourseDetailsPage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-4">{course.name}</h1>
-      <img
-        src={`${import.meta.env.VITE_PUBLIC_API_URL}/${course.thumbnailUrl}`}
-        alt={course.name}
-        className="w-full h-96 object-cover rounded-lg mb-6"
-      />
-      <p className="text-lg text-gray-700 mb-4">{course.synopsis}</p>
+    <>
+      <Header />
+      <div className="bg-gray-50" style={{ minHeight: "calc(100vh - 58px)" }}>
+        <div className="max-w-6xl py-6 container mx-auto p-4">
+          <img
+            src={`${import.meta.env.VITE_PUBLIC_API_URL}/${
+              course.thumbnailUrl
+            }`}
+            alt={course.name}
+            className="w-full h-96 object-cover rounded-lg mb-6"
+          />
+          <Button onClick={() => window.history.back()}>Voltar</Button>
+          <h1 className="text-4xl font-bold mt-3 mb-4">{course.name}</h1>
+          <p className="text-lg text-gray-700 mb-4">{course.synopsis}</p>
 
-      <div className="flex items-center gap-4 mb-4">
-        {tokenExists && (
-          <>
-            <button
-              onClick={handleLikeClick}
-              className={`px-4 py-2 rounded ${
-                isLiked
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-              }`}
-            >
-              {isLiked ? "&#10003; Curtido" : "Curtir"}
-            </button>
+          <div className="flex items-center gap-4 mb-4">
+            {token && (
+              <>
+                <button
+                  onClick={handleLikeClick}
+                  className={`bg-main-red text-white px-4 py-2 rounded ${
+                    isLiked
+                      ? "bg-yellow-500 text-white"
+                      : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                  }`}
+                >
+                  {isLiked ? "Curtido" : "Curtir"}
+                </button>
 
-            <button
-              onClick={handleFavoriteClick}
-              className={`px-4 py-2 rounded ${
-                isFavorited
-                  ? "bg-yellow-500 text-white"
-                  : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-              }`}
-            >
-              {isFavorited ? "&#9733; Favorito" : "Favoritar"}
-            </button>
-          </>
-        )}
-        {!tokenExists && (
-          <p className="text-sm text-gray-600">
-            Faça login para curtir e favoritar este curso.
-          </p>
-        )}
+                <button
+                  onClick={handleFavoriteClick}
+                  className={`bg-main-red text-white px-4 py-2 rounded ${
+                    isFavorited
+                      ? "bg-yellow-500 text-white"
+                      : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                  }`}
+                >
+                  {isFavorited ? "Favorito" : "Favoritar"}
+                </button>
+              </>
+            )}
+            {!token && (
+              <p className="text-sm text-gray-600">
+                Faça login para curtir e favoritar este curso.
+              </p>
+            )}
+          </div>
+
+          <div className="bg-gray-100 p-4 rounded-lg">
+            <h2 className="text-2xl font-semibold mb-2">Detalhes:</h2>
+            <p>{course?.episodes.length} episódios</p>
+          </div>
+        </div>
       </div>
-
-      <div className="bg-gray-100 p-4 rounded-lg">
-        <h2 className="text-2xl font-semibold mb-2">Detalhes:</h2>
-      </div>
-
-      <button
-        onClick={() => window.history.back()}
-        className="mt-6 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Voltar
-      </button>
-    </div>
+    </>
   );
 }
