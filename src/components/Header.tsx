@@ -1,19 +1,22 @@
 import { useState } from "react";
 import { login } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+import Button from "./common/Button";
 
 export function Header() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const params = {email, password}
+  const params = { email, password };
 
   async function handleLogin() {
     try {
       const { status } = await login(params);
 
       if (status === 200) {
-        window.location.href = "/login";
+        navigate("/home");
       }
-      
+
       alert("Login realizado com sucesso!");
     } catch (error) {
       console.error("Erro ao logar:", error);
@@ -22,15 +25,18 @@ export function Header() {
   }
 
   function handleRegisterRedirect() {
-    window.location.href = "/register";
+    navigate("/register");
   }
 
-   return (
-    <header className="bg-white shadow-md py-4 px-4 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div className="text-2xl font-bold text-blue-600 text-center sm:text-left">EduTech</div>
+  return (
+    <header className="max-w-6xl py-3 px-3 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between w-full mx-auto gap-3">
+      <div className="text-2xl font-bold text-main-red text-center sm:text-left">
+        Reforço Nota Dez
+      </div>
 
       <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto">
         <input
+          name="email"
           type="email"
           placeholder="Email"
           className="border rounded px-2 py-1 w-full sm:w-auto"
@@ -45,18 +51,8 @@ export function Header() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <div className="flex gap-2 w-full sm:w-auto">
-          <button
-            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 w-full sm:w-auto"
-            onClick={handleLogin}
-          >
-            Entrar
-          </button>
-          <button
-            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 w-full sm:w-auto"
-            onClick={handleRegisterRedirect}
-          >
-            Registrar
-          </button>
+          <Button onClick={handleLogin}>Entrar</Button>
+          <Button onClick={handleRegisterRedirect}>Registrar</Button>
         </div>
       </div>
     </header>

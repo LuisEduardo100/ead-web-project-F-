@@ -4,3 +4,9 @@ export interface Course {
   synopsis: string;
   thumbnailUrl: string;
 }
+
+export interface CourseDetails extends Course {
+  favorited: boolean;
+  liked: boolean;
+  // episodes: Episodes[];
+}
