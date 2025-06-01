@@ -23,7 +23,6 @@ export async function login(params: LoginParams) {
     return err;
   });
 
-  console.log(response);
   if (response.status === 200) {
     sessionStorage.setItem("token", response.data.token);
   }
