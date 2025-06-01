@@ -1,3 +1,5 @@
+import type { Episode } from "./Episode";
+
 export interface Course {
   id: number;
   name: string;
@@ -8,5 +10,5 @@ export interface Course {
 export interface CourseDetails extends Course {
   favorited: boolean;
   liked: boolean;
-  // episodes: Episodes[];
+  episodes: Episode[];
 }

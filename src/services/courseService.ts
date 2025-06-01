@@ -1,3 +1,4 @@
+import type { AxiosError } from "axios";
 import { api } from "../api/axios";
 import type { CourseDetails } from "../types/Course";
 

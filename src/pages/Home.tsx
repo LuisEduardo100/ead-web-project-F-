@@ -7,7 +7,7 @@ export function Home() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <section className="bg-gray-50 flex-grow py-6">
-        <div className="max-w-6xl mx-auto px-3 py-3">
+        <div className="max-w-6xl mx-auto px-3">
           <Presentation />
           <SlideSection />
         </div>
