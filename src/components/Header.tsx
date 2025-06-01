@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { login } from "../services/authService";
+import { useNavigate } from "react-router-dom";
 import Button from "./common/Button";
 
 export function Header() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const params = { email, password };
@@ -12,7 +14,7 @@ export function Header() {
       const { status } = await login(params);
 
       if (status === 200) {
-        window.location.href = "/login";
+        navigate("/home");
       }
 
       alert("Login realizado com sucesso!");
@@ -23,11 +25,11 @@ export function Header() {
   }
 
   function handleRegisterRedirect() {
-    window.location.href = "/register";
+    navigate("/register");
   }
 
   return (
-    <header className="bg-white shadow-md py-3 px-4 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <header className="max-w-6xl py-3 px-3 sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between w-full mx-auto gap-3">
       <div className="text-2xl font-bold text-main-red text-center sm:text-left">
         Reforço Nota Dez
       </div>

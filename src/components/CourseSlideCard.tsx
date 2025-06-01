@@ -6,7 +6,7 @@ interface Props {
 
 export function CourseSlideCard({ course }: Props) {
   return (
-    <div className="min-w-[250px] bg-white rounded-2xl shadow hover:shadow-lg transition-shadow">
+    <div className="min-w-[250px] bg-white rounded-2xl shadow hover:shadow-lg transition-shadow cursor-pointer">
       <img
         src={`${import.meta.env.VITE_PUBLIC_API_URL}/${course.thumbnailUrl}`}
         alt={course.name}

@@ -7,7 +7,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<HomeAuth />} />
+      <Route path="/home" element={<HomeAuth />} />
       <Route path="/register" element={<Register />} />
     </Routes>
   );
