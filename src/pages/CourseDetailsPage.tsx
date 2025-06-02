@@ -12,6 +12,7 @@ import {
 } from "../services/courseService";
 import { Header } from "../components/Header";
 import Button from "../components/common/Button";
+import EpisodeList from "../components/Episodes";
 
 export default function CourseDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -34,18 +35,13 @@ export default function CourseDetailsPage() {
     const fetchDetails = async () => {
       try {
         setLoading(true);
+        let data;
         if (token) {
-          const data = await getCourseDetails(id);
-          if (data) {
-            setCourse(data);
-            setIsLiked(data.liked);
-            setIsFavorited(data.favorited);
-          } else {
-            setError("Curso não encontrado.");
-          }
-          return;
+          data = await getCourseDetails(id);
+        } else {
+          data = await getCourseDetailsNoAuth(id);
         }
-        const data = await getCourseDetailsNoAuth(id);
+
         if (data) {
           setCourse(data);
           setIsLiked(data.liked);
@@ -65,9 +61,7 @@ export default function CourseDetailsPage() {
     };
 
     fetchDetails();
-  }, [id]);
-
-  console.log(course);
+  }, [id, token]);
 
   const handleLikeClick = async () => {
     if (!token) {
@@ -141,7 +135,7 @@ export default function CourseDetailsPage() {
                   className={`bg-main-red text-white px-4 py-2 rounded ${
                     isLiked
                       ? "bg-yellow-500 text-white"
-                      : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                      : "bg-gray-300 text-gray-700 hover:bg-main-red-hover"
                   }`}
                 >
                   {isLiked ? "Curtido" : "Curtir"}
@@ -152,7 +146,7 @@ export default function CourseDetailsPage() {
                   className={`bg-main-red text-white px-4 py-2 rounded ${
                     isFavorited
                       ? "bg-yellow-500 text-white"
-                      : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                      : "bg-gray-300 text-gray-700 hover:bg-main-red-hover"
                   }`}
                 >
                   {isFavorited ? "Favorito" : "Favoritar"}
@@ -167,8 +161,12 @@ export default function CourseDetailsPage() {
           </div>
 
           <div className="bg-gray-100 p-4 rounded-lg">
-            <h2 className="text-2xl font-semibold mb-2">Detalhes:</h2>
-            <p>{course?.episodes.length} episódios</p>
+            <h2 className="text-2xl font-semibold mb-2">
+              Episódios do curso: {course?.episodes.length}
+            </h2>
+            {course.episodes && course.episodes.length > 0 && (
+              <EpisodeList episodes={course.episodes} />
+            )}
           </div>
         </div>
       </div>

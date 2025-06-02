@@ -14,7 +14,7 @@ export function Header() {
       const { status } = await login(params);
 
       if (status === 200) {
-        navigate("/home");
+        navigate(window.location.pathname);
       }
 
       alert("Login realizado com sucesso!");
