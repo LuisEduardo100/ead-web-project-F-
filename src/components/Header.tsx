@@ -8,13 +8,18 @@ export function Header() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const params = { email, password };
+  const currentPath = window.location.pathname;
 
   async function handleLogin() {
     try {
       const { status } = await login(params);
 
       if (status === 200) {
-        navigate(window.location.pathname);
+        if (currentPath === "/") {
+          navigate("/home");
+        } else {
+          navigate(window.location.pathname);
+        }
       }
 
       alert("Login realizado com sucesso!");

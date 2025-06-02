@@ -13,6 +13,7 @@ import {
 import { Header } from "../components/Header";
 import Button from "../components/common/Button";
 import EpisodeList from "../components/Episodes";
+import { HeaderAuth } from "../components/HeaderAuth";
 
 export default function CourseDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -113,7 +114,7 @@ export default function CourseDetailsPage() {
 
   return (
     <>
-      <Header />
+      {token ? <HeaderAuth /> : <Header />}
       <div className="bg-gray-50" style={{ minHeight: "calc(100vh - 58px)" }}>
         <div className="max-w-6xl py-6 container mx-auto p-4">
           <img
