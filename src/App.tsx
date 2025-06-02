@@ -1,13 +1,13 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
-import { Register } from "./pages/Register";
 import { HomeAuth } from "./pages/HomeAuth";
+import { Register } from "./pages/Register";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<HomeAuth />} />
+      <Route path="/home" element={<HomeAuth />} />
       <Route path="/register" element={<Register />} />
     </Routes>
   );
