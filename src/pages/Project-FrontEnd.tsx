@@ -4,12 +4,12 @@ import { Header } from "../components/Header";
 import Button from "../components/common/Button";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import {
-  favoriteCourse,
-  getCourseDetails,
-  getCourseDetailsNoAuth,
-  likeCourse,
-  unfavoriteCourse,
-  unlikeCourse,
+    favoriteCourse,
+    getCourseDetails,
+    getCourseDetailsNoAuth,
+    likeCourse,
+    unfavoriteCourse,
+    unlikeCourse,
 } from "../services/courseService";
 import type { CourseDetails } from "../types/Course";
 
