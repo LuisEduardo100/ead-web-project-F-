@@ -47,17 +47,11 @@ export function HeaderAuth() {
             >
               Início
             </Link>
-            <Link
-              to="/courses"
-              className="text-gray-700 hover:text-main-red transition-colors duration-200"
-            >
-              Cursos
-            </Link>
 
             <div className="relative" ref={profileMenuRef}>
               {" "}
               <button
-                className="w-10 h-10 rounded-full bg-main-red flex items-center justify-center text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                className="w-10 h-10 cursor-pointer rounded-full bg-main-red flex items-center justify-center text-white font-semibold focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                 aria-label="Menu do Perfil"
               >

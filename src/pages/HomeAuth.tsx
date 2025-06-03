@@ -12,7 +12,7 @@ export function HomeAuth() {
       }
     };
     authenticate();
-  }, [token]);
+  }, [navigate, token]);
 
   return (
     <>

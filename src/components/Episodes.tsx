@@ -19,7 +19,7 @@ export default function EpisodeList({ episodes }: EpisodeListProps) {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg mt-6">
+    <div className="bg-white shadow-md rounded-2xl mt-6">
       {episodes.length === 0 ? (
         <p className="text-gray-600">
           Nenhum episódio disponível para este curso.

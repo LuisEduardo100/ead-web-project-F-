@@ -6,3 +6,4 @@ export interface Episode {
   videourl: string;
   secondsLong: number;
 }
+
