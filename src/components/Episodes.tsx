@@ -31,7 +31,7 @@ export default function EpisodeList({ episodes }: EpisodeListProps) {
             .map((episode) => (
               <li
                 key={episode.id}
-                className="py-4 px-3 cursor-pointer hover:bg-gray-50 transition-colors duration-200 rounded-md"
+                className="py-4 px-3 cursor-pointer hover:bg-gray-50 transition-colors duration-200 rounded-2xl"
                 onClick={() => handleEpisodeClick(episode.id)}
               >
                 <div className="flex justify-between items-center">
