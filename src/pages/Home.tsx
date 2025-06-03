@@ -3,6 +3,7 @@ import { Presentation } from "../components/Presentation";
 import { SlideSection } from "../components/SlideSection";
 
 export function Home() {
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
