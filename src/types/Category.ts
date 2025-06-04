@@ -1,3 +1,5 @@
+import type { Course } from "./Course";
+
 export interface Category {
   id: number;
   name: string;
@@ -9,4 +11,10 @@ export interface Categories {
   page: number;
   perPage: number;
   total: number;
+}
+
+export interface CategoryWithCourse {
+  id: number;
+  name: string;
+  courses: Course[];
 }

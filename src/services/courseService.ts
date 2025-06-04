@@ -111,3 +111,4 @@ export async function unfavoriteCourse(courseId: string): Promise<boolean> {
     return false;
   }
 }
+
