@@ -4,32 +4,38 @@ import "swiper/css";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import { useEffect, useState } from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { api } from "../api/axios";
 import type { Course } from "../types/Course";
 import { CourseSlideCard } from "./CourseSlideCard";
-
+import { getFeaturedCourses } from "../services/courseService";
 
 export function SlideSection() {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchCourses() {
-      try {
-        const response = await api.get("/courses/featured");
-        if (Array.isArray(response.data)) {
-          setCourses(response.data);
-        } else {
-          console.error("Resposta inválida: ", response.data);
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const fetchCourses = async () => {
+      const data = await getFeaturedCourses();
+
+      timeoutId = setTimeout(() => {
+        if (data) {
+          setCourses(data);
         }
-      } catch (error) {
-        console.error("Erro ao buscar cursos em destaque", error);
-      }
-    }
+        setLoading(false);
+      }, 300);
+    };
 
     fetchCourses();
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   return (
@@ -49,13 +55,15 @@ export function SlideSection() {
           768: { slidesPerView: 2 },
           1024: { slidesPerView: 3 },
         }}
-        className="pb-8"
+        className="pb-8 fade-in-slide"
+        style={{ animationDelay: `300ms` }}
       >
-        {courses.map((course) => (
-          <SwiperSlide key={course.id}>
-            <CourseSlideCard course={course} />
-          </SwiperSlide>
-        ))}
+        {!loading &&
+          courses.map((course) => (
+            <SwiperSlide key={course.id}>
+              <CourseSlideCard course={course} />
+            </SwiperSlide>
+          ))}
       </Swiper>
     </div>
   );

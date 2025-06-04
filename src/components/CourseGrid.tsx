@@ -1,5 +1,6 @@
-import type { Course } from '../types/Course';
-import { CourseCard } from './CourseCard';
+import type { Course } from "../types/Course";
+import { LoadingSpinner } from "./common/LoadingSpinner";
+import { CourseCard } from "./CourseCard";
 
 interface CourseGridProps {
   courses: Course[];
@@ -11,8 +12,7 @@ export function CourseGrid({ courses, loading, error }: CourseGridProps) {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-10">
-        {/* Use seu componente LoadingSpinner aqui */}
-        <p>Carregando cursos...</p>
+        <LoadingSpinner />
       </div>
     );
   }
