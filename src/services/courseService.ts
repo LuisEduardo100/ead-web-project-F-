@@ -1,5 +1,5 @@
 import { api } from "../api/axios";
-import type { CourseDetails } from "../types/Course";
+import type { Course, CourseDetails } from "../types/Course";
 
 export async function getCourseDetails(
   id: string
@@ -112,3 +112,17 @@ export async function unfavoriteCourse(courseId: string): Promise<boolean> {
   }
 }
 
+export async function getFeaturedCourses(): Promise<Course[] | null> {
+  try {
+    const response = await api.get("/courses/featured");
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else {
+      console.error("Resposta inválida: ", response.data);
+      return null;
+    }
+  } catch (error) {
+    console.error("Erro ao buscar cursos em destaque", error);
+    return null;
+  }
+}

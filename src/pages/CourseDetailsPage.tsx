@@ -14,8 +14,11 @@ import {
   unlikeCourse,
 } from "../services/courseService";
 import type { CourseDetails } from "../types/Course";
+import { useToast } from "../contexts/ToastContext";
 
 export default function CourseDetailsPage() {
+  const { showToast } = useToast();
+
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
@@ -75,7 +78,10 @@ export default function CourseDetailsPage() {
       if (success) {
         setIsLiked(!isLiked);
       } else {
-        alert(`Erro ao ${isLiked ? "descurtir" : "curtir"} o curso.`);
+        showToast({
+          message: `Erro ao ${isFavorited ? "descutir" : "curtir"} o curso.`,
+          type: "error",
+        });
       }
     }
   };
@@ -92,7 +98,12 @@ export default function CourseDetailsPage() {
       if (success) {
         setIsFavorited(!isFavorited);
       } else {
-        alert(`Erro ao ${isFavorited ? "desfavoritar" : "favoritar"} o curso.`);
+        showToast({
+          message: `Erro ao ${
+            isFavorited ? "desfavoritar" : "favoritar"
+          } o curso.`,
+          type: "error",
+        });
       }
     }
   };
