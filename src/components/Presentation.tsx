@@ -1,9 +1,10 @@
 export function Presentation() {
   return (
     <div
-      className="relative h-[400px] mb-10 bg-cover bg-center bg-no-repeat rounded-2xl"
+      className="relative h-[400px] mb-10 bg-cover bg-center bg-no-repeat rounded-2xl fade-in-slide"
       style={{
         backgroundImage: "url('src/assets/hero_presentation.jpg')",
+        animationDelay: `300ms`,
       }}
     >
       <div className="absolute inset-0 bg-black/40 rounded-2xl" />
