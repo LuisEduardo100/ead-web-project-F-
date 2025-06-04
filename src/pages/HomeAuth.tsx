@@ -4,7 +4,10 @@ import { CategoryBar } from "../components/CategoryBar";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import { CourseGrid } from "../components/CourseGrid";
 import { HeaderAuth } from "../components/HeaderAuth";
-import { getCategories, getCoursesByCategory } from "../services/categoryService";
+import {
+  getCategories,
+  getCoursesByCategory,
+} from "../services/categoryService";
 import type { Category } from "../types/Category";
 import type { Course } from "../types/Course";
 
@@ -20,7 +23,6 @@ export function HomeAuth() {
   const [errorCategories, setErrorCategories] = useState<string | null>(null);
   const [errorCourses, setErrorCourses] = useState<string | null>(null);
 
-
   useEffect(() => {
     const authenticate = async () => {
       if (!token) {
@@ -30,7 +32,7 @@ export function HomeAuth() {
     authenticate();
   }, [navigate, token]);
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         setLoadingCategories(true);
@@ -78,20 +80,27 @@ export function HomeAuth() {
     };
 
     fetchCourses();
-  }, [selectedCategory]); 
+  }, [selectedCategory]);
 
   const handleSelectCategory = (categoryId: number) => {
     setSelectedCategory(categoryId);
   };
 
+  if (loadingCategories || loadingCourses) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner size="large" />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen flex flex-col">
-      <HeaderAuth /> 
+      <HeaderAuth />
       <section className="bg-gray-50 flex-grow py-6">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"> 
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {loadingCategories ? (
             <div className="flex justify-center items-center py-10">
-              <LoadingSpinner size="large" /> 
+              <LoadingSpinner size="large" />
             </div>
           ) : errorCategories ? (
             <div className="text-center p-8 text-red-600">
@@ -105,11 +114,7 @@ export function HomeAuth() {
             />
           )}
 
-          <CourseGrid
-            courses={courses}
-            loading={loadingCourses}
-            error={errorCourses}
-          />
+          <CourseGrid courses={courses} error={errorCourses} />
         </div>
       </section>
     </div>

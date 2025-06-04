@@ -1,22 +1,12 @@
 import type { Course } from "../types/Course";
-import { LoadingSpinner } from "./common/LoadingSpinner";
 import { CourseCard } from "./CourseCard";
 
 interface CourseGridProps {
   courses: Course[];
-  loading: boolean;
   error: string | null;
 }
 
-export function CourseGrid({ courses, loading, error }: CourseGridProps) {
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-10">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
+export function CourseGrid({ courses, error }: CourseGridProps) {
   if (error) {
     return (
       <div className="text-center p-8 text-red-600">
