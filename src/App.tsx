@@ -1,8 +1,8 @@
-import { Routes, Route } from "react-router-dom";
-import { Home } from "./pages/Home";
-import { Register } from "./pages/Register";
-import { HomeAuth } from "./pages/HomeAuth";
+import { Route, Routes } from "react-router-dom";
 import CourseDetailsPage from "./pages/CourseDetailsPage";
+import { Home } from "./pages/Home";
+import { HomeAuth } from "./pages/HomeAuth";
+import { Register } from "./pages/Register";
 
 function App() {
   return (

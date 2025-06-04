@@ -1,5 +1,5 @@
 import { api } from "../api/axios";
-import type { Categories, CategoriesWithCourse } from "../types/Category";
+import type { Categories, CategoryWithCourse } from "../types/Category";
 
 export async function getCategories(): Promise<Categories> {
   const token = sessionStorage.getItem("token");
@@ -22,12 +22,12 @@ export async function getCategories(): Promise<Categories> {
 
 export async function getCoursesByCategory(
   categoryId: number | string
-): Promise<CategoriesWithCourse[]> {
+): Promise<CategoryWithCourse> {
   const token = sessionStorage.getItem("token");
 
   try {
     const response = await api.get(
-      `${import.meta.env.VITE_PUBLIC_API_URL}/categories/${categoryId}/courses`,
+      `${import.meta.env.VITE_PUBLIC_API_URL}/categories/${categoryId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
