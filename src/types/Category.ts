@@ -14,7 +14,7 @@ export interface Categories {
 }
 
 export interface CategoryWithCourse {
-  id: number
-  name: string
-  courses: Course[]
+  id: number;
+  name: string;
+  courses: Course[];
 }
