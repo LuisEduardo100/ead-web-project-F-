@@ -3,13 +3,13 @@
 import "swiper/css";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
-import "swiper/css/navigation";
 import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import { CourseSlideCard } from "./CourseSlideCard";
-import type { Course } from "../types/Course";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { api } from "../api/axios";
+import type { Course } from "../types/Course";
+import { CourseSlideCard } from "./CourseSlideCard";
 
 
 export function SlideSection() {
