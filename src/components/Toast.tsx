@@ -25,7 +25,7 @@ export default function Toast({
 
   return (
     <div
-      className={`fixed top-[10%] right-0 z-50 text-white px-4 py-3 rounded shadow-lg transition-all ${bgColor}`}
+      className={`fixed top-[10%] right-0 z-50max-w-xs w-[90%] sm:w-auto sm:max-w-sm text-white px-12 py-3 rounded shadow-2xl transition-all ${bgColor}`}
     >
       {message}
     </div>

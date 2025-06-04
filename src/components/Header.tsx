@@ -19,7 +19,7 @@ export function Header() {
         showToast({
           message: "Login realizado com sucesso!",
           type: "success",
-          duration: 1500,
+          duration: 1000,
           onAfterClose: () => {
             const path =
               window.location.pathname === "/"
