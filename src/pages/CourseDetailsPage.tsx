@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { CourseDetails } from "../types/Course";
+import Button from "../components/common/Button";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
+import EpisodeList from "../components/Episodes";
+import { Header } from "../components/Header";
+import { HeaderAuth } from "../components/HeaderAuth";
 import {
   favoriteCourse,
   getCourseDetails,
@@ -10,10 +13,7 @@ import {
   unfavoriteCourse,
   unlikeCourse,
 } from "../services/courseService";
-import { Header } from "../components/Header";
-import Button from "../components/common/Button";
-import EpisodeList from "../components/Episodes";
-import { HeaderAuth } from "../components/HeaderAuth";
+import type { CourseDetails } from "../types/Course";
 
 export default function CourseDetailsPage() {
   const navigate = useNavigate();

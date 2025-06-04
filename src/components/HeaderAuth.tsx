@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export function HeaderAuth() {
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ export function HeaderAuth() {
                   <hr className="my-1 border-gray-200" />
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
                   >
                     Sair
                   </button>
