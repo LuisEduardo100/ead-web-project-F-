@@ -39,7 +39,7 @@ export function SlideSection() {
   }, []);
 
   return (
-    <div>
+    <div className="pb-8 fade-in-slide" style={{ animationDelay: `300ms` }}>
       <h2 className="text-2xl font-semibold mb-4 text-left">
         Cursos em destaque
       </h2>
@@ -55,8 +55,6 @@ export function SlideSection() {
           768: { slidesPerView: 2 },
           1024: { slidesPerView: 3 },
         }}
-        className="pb-8 fade-in-slide"
-        style={{ animationDelay: `300ms` }}
       >
         {!loading &&
           courses.map((course) => (
