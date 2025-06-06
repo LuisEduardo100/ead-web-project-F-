@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import Button from "../components/common/Button";
+import { useParams } from "react-router-dom";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import { Header } from "../components/Header";
 import { HeaderAuth } from "../components/HeaderAuth";
@@ -15,11 +14,13 @@ import {
 import type { CourseDetails } from "../types/Course";
 import { useToast } from "../contexts/ToastContext";
 import EpisodeList from "../components/EpisodeList";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import StarIcon from "@mui/icons-material/Star";
+import ArrowBackButton from "../components/common/ArrowBackButton";
 
 export default function CourseDetailsPage() {
   const { showToast } = useToast();
 
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const [course, setCourse] = useState<CourseDetails | null>(null);
@@ -133,7 +134,6 @@ export default function CourseDetailsPage() {
             className="relative w-full h-rounded-lg mb-6 overflow-hidden rounded-2xl"
             style={{ paddingTop: "36.25%" }}
           >
-            {" "}
             <img
               src={`${import.meta.env.VITE_PUBLIC_API_URL}/${
                 course.thumbnailUrl
@@ -142,53 +142,40 @@ export default function CourseDetailsPage() {
               className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
-          <Button
-            onClick={() => {
-              if (token) {
-                navigate("/home");
-              } else {
-                navigate("/");
-              }
-            }}
-          >
-            Voltar
-          </Button>
-          <h1 className="text-4xl font-bold mt-3 mb-4">{course.name}</h1>
-          <p className="text-lg text-gray-700 mb-4">{course.synopsis}</p>
+          <div className="flex items-center gap-3 md:gap-4 mb-4">
+            <ArrowBackButton token={token} />
+            <h1 className="text-2xl md:text-4xl font-bold leading-tight">
+              {course.name}
+            </h1>
 
-          <div className="flex items-center gap-4 mb-4">
             {token && (
-              <>
-                <Button
+              <div className="flex items-center gap-2 ml-auto">
+                <button
                   onClick={handleLikeClick}
-                  className={`bg-main-red text-white px-4 py-2 ${
+                  className={`cursor-pointer p-2 rounded-full transition-colors duration-200 ${
                     isLiked
-                      ? "bg-yellow-500 text-white"
-                      : "bg-gray-300 text-gray-700 hover:bg-main-red-hover"
+                      ? "text-red-500 hover:bg-red-100 focus:ring-red-300"
+                      : "text-gray-500 hover:bg-gray-200 focus:ring-gray-300"
                   }`}
                 >
-                  {isLiked ? "Curtido" : "Curtir"}
-                </Button>
-
-                <Button
+                  <FavoriteIcon sx={{ fontSize: { xs: 24, sm: 28, md: 32 } }} />
+                </button>
+                <button
                   onClick={handleFavoriteClick}
-                  className={`bg-main-red text-white px-4 py-2 ${
+                  className={`cursor-pointer p-2 rounded-full transition-colors duration-200 ${
                     isFavorited
-                      ? "bg-yellow-500 text-white"
-                      : "bg-gray-300 text-gray-700 hover:bg-main-red-hover"
+                      ? "text-yellow-500 hover:bg-yellow-100 focus:ring-yellow-300"
+                      : "text-gray-500 hover:bg-gray-200 focus:ring-gray-300"
                   }`}
                 >
-                  {isFavorited ? "Favorito" : "Favoritar"}
-                </Button>
-              </>
-            )}
-            {!token && (
-              <p className="text-sm text-gray-600">
-                Faça login para curtir e favoritar este curso.
-              </p>
+                  <StarIcon sx={{ fontSize: { xs: 24, sm: 28, md: 32 } }} />
+                </button>
+              </div>
             )}
           </div>
-
+          <p className="text-base md:text-lg text-gray-700 mb-6">
+            {course.synopsis}
+          </p>
           <div className="bg-gray-100 p-4 rounded-2xl">
             <h2 className="text-2xl font-semibold mb-2">
               Episódios do curso: {course?.episodes.length}

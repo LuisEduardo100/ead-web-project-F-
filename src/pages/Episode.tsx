@@ -450,6 +450,15 @@ export default function EpisodePage() {
   /**
    * TRATAMENTO DE ERRO E CARREGAMENTO
    */
+  useEffect(() => {
+    const authenticate = async () => {
+      if (!token) {
+        navigate("/");
+      }
+    };
+    authenticate();
+  }, [navigate, token]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -480,14 +489,9 @@ export default function EpisodePage() {
             >
               <ArrowBackIcon sx={{ fontSize: { xs: 24, sm: 28, md: 32 } }} />{" "}
             </button>
-            <div className="flex flex-col">
-              <h1 className="md:text-4xl sm:text-2xl xs:text-lg font-bold ">
-                {episode.order}. {episode.name}{" "}
-              </h1>
-              <p className="md:text-2xl sm:text-lg xs:text-lg  text-gray-700">
-                {course.name.toUpperCase()}
-              </p>
-            </div>
+            <h1 className="md:text-4xl sm:text-2xl xs:text-lg font-bold ">
+              {episode.order}. {episode.name}{" "}
+            </h1>
           </div>
 
           {videoUrl && (

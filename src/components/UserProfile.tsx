@@ -6,13 +6,16 @@ import {
   updatePassword,
   updateUser,
 } from "../services/userService";
-import { Link } from "react-router-dom";
+import ArrowBackButton from "./common/ArrowBackButton";
+import { useToast } from "../contexts/ToastContext";
+import { LoadingSpinner } from "./common/LoadingSpinner";
 
 export default function UserProfile() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [successMessage, setSuccessMessage] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const token = sessionStorage.getItem("token");
+
+  const { showToast } = useToast();
 
   const {
     register: registerUser,
@@ -39,69 +42,60 @@ export default function UserProfile() {
           birth: new Date(userData.birth).toISOString().split("T")[0],
         });
       } catch {
-        setErrorMessage("Não foi possível carregar os dados do perfil.");
+        showToast({
+          message: "Não foi possível carregar os dados do perfil.",
+          type: "error",
+        });
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchUser();
-  }, [resetUserForm]);
+  }, [resetUserForm, showToast]);
 
   const onUserUpdate: SubmitHandler<UpdateUser> = async (data) => {
     try {
-      setSuccessMessage("");
-      setErrorMessage("");
       await updateUser(data);
-      setSuccessMessage("Dados atualizados com sucesso!");
+      showToast({ message: "Dados atualizados com sucesso!", type: "success" });
     } catch {
-      setErrorMessage("Erro ao atualizar os dados. Tente novamente.");
+      showToast({
+        message: "Confira seus dados e tente novamente.",
+        type: "error",
+      });
     }
   };
 
   const onPasswordUpdate: SubmitHandler<UpdateUserPassword> = async (data) => {
     try {
-      setSuccessMessage("");
-      setErrorMessage("");
       await updatePassword(data);
-      setSuccessMessage("Senha alterada com sucesso!");
+      showToast({ message: "Senha alterada com sucesso!", type: "success" });
       resetPasswordForm();
     } catch {
-      setErrorMessage("Erro ao alterar a senha. Verifique sua senha atual.");
+      showToast({
+        message: "Erro ao alterar a senha. Verifique sua senha atual.",
+        type: "error",
+      });
     }
   };
 
   if (isLoading) {
-    return <p className="text-center text-white mt-8">Carregando perfil...</p>;
+    return <LoadingSpinner size="large" />;
   }
 
-  if (errorMessage && !user) {
-    return <p className="text-center text-red-500 mt-8">{errorMessage}</p>;
+  if (!user) {
+    return (
+      <p className="text-center text-red-500 mt-8">
+        Usuário não encontrado ou erro de carregamento.
+      </p>
+    );
   }
-
   return (
     <div className="container max-w-6xl mx-auto p-4 md:p-8 max-w-4xl bg-white">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex items-center mb-6 gap-2">
+        <ArrowBackButton token={token} />
         <h1 className="text-main-red text-3xl font-bold">Meu Perfil</h1>
-        <Link
-          to="/home"
-          className="bg-main-red 0 hover:bg-main-red-hover text-white font-semibold py-2 px-4 rounded-md transition duration-300"
-        >
-          Voltar
-        </Link>
       </div>
-
-      {successMessage && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-md relative mb-4">
-          {successMessage}
-        </div>
-      )}
-      {errorMessage && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mb-4">
-          {errorMessage}
-        </div>
-      )}
-
       <form
         onSubmit={handleSubmitUser(onUserUpdate)}
         className="bg-white p-6 border border-gray-200 rounded-lg shadow-sm mb-8"
