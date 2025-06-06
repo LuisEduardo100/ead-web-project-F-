@@ -1,8 +1,21 @@
+import { useEffect } from "react";
 import { Header } from "../components/Header";
 import { Presentation } from "../components/Presentation";
 import { SlideSection } from "../components/SlideSection";
+import { useNavigate } from "react-router-dom";
 
 export function Home() {
+  const token = sessionStorage.getItem("token");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const authenticate = async () => {
+      if (token) {
+        navigate("/home");
+      }
+    };
+    authenticate();
+  }, [navigate, token]);
 
   return (
     <div className="min-h-screen flex flex-col">

@@ -3,6 +3,7 @@ import CourseDetailsPage from "./pages/CourseDetailsPage";
 import { Home } from "./pages/Home";
 import { HomeAuth } from "./pages/HomeAuth";
 import { Register } from "./pages/Register";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route path="/home" element={<HomeAuth />} />
       <Route path="/register" element={<Register />} />
       <Route path="/courses/:id" element={<CourseDetailsPage />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }
