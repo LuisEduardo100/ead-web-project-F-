@@ -24,6 +24,7 @@ import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import Replay10 from "@mui/icons-material/Replay10";
 import Forward10 from "@mui/icons-material/Forward10";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function EpisodePage() {
   const navigate = useNavigate();
@@ -472,12 +473,22 @@ export default function EpisodePage() {
       <HeaderAuth />
       <div className="bg-gray-50" style={{ minHeight: "calc(100vh - 58px)" }}>
         <div className="max-w-6xl py-6 container mx-auto p-4">
-          <Button
-            onClick={() => navigate(`/courses/${course.id}`)}
-            className="mb-4 px-6 py-3"
-          >
-            Voltar ao Curso
-          </Button>
+          <div className="flex items-center gap-3 mb-4">
+            <button
+              onClick={() => navigate(`/courses/${course.id}`)}
+              className="cursor-pointer p-2 rounded-full text-gray-700 hover:bg-gray-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+            >
+              <ArrowBackIcon sx={{ fontSize: { xs: 24, sm: 28, md: 32 } }} />{" "}
+            </button>
+            <div className="flex flex-col">
+              <h1 className="md:text-4xl sm:text-2xl xs:text-lg font-bold ">
+                {episode.order}. {episode.name}{" "}
+              </h1>
+              <p className="md:text-2xl sm:text-lg xs:text-lg  text-gray-700">
+                {course.name.toUpperCase()}
+              </p>
+            </div>
+          </div>
 
           {videoUrl && (
             <div
@@ -485,7 +496,7 @@ export default function EpisodePage() {
               className={`relative w-full rounded-lg md:rounded-2xl overflow-hidden mb-6 bg-black
             ${isFullScreen ? "fixed inset-0 z-50 rounded-none" : "aspect-video"}
             group`}
-              style={{ paddingTop: isFullScreen ? "0" : "56.25%" }} // aspect-video já define isso
+              style={{ paddingTop: isFullScreen ? "0" : "56.25%" }}
               onDoubleClick={handleFullScreen}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
@@ -517,7 +528,7 @@ export default function EpisodePage() {
                 {!playing && (
                   <button
                     onClick={handlePlayPause}
-                    className="text-white bg-main-red/50 p-2 sm:p-4 rounded-full transition-colors duration-200 hover:bg-main-red-hover/75 focus:outline-none focus:ring-4 focus:ring-main-red focus:ring-opacity-75 cursor-pointer"
+                    className="text-white bg-main-red/50 p-2 sm:p-4 rounded-full transition-colors duration-200 hover:bg-main-red-hover/75 cursor-pointer"
                   >
                     <PlayArrowIcon
                       sx={{ fontSize: { xs: 30, sm: 60, md: 80 } }}
@@ -526,7 +537,6 @@ export default function EpisodePage() {
                 )}
               </div>
 
-              {/* CONTROLES INFERIORES */}
               <div
                 className={`absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-4 bg-gradient-to-t from-black/70 to-transparent flex flex-col transition-opacity duration-300 ${
                   controlsVisible
@@ -534,7 +544,6 @@ export default function EpisodePage() {
                     : "opacity-0 pointer-events-none"
                 }`}
               >
-                {/* Barra de Progresso */}
                 <input
                   type="range"
                   min="0"
@@ -564,7 +573,6 @@ export default function EpisodePage() {
                       }
                     }
                   }}
-                  // Barra de progresso mais fina em 'xs'
                   className="w-full h-1 rounded-lg appearance-none cursor-pointer mb-2 bg-gray-600/70 custom-range-thumb"
                   style={{
                     background: `linear-gradient(to right, #ef4444 ${
@@ -573,18 +581,13 @@ export default function EpisodePage() {
                   }}
                 />
 
-                {/* Linha de Botões e Tempo */}
                 <div className="flex flex-wrap justify-between items-center text-white text-[0.6rem] sm:text-xs md:text-sm lg:text-base pointer-events-auto">
-                  {/* Grupo Esquerdo de Controles */}
                   <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
                     <button
                       onClick={handleRewind}
                       className="p-0.5 sm:p-1 text-white/80 hover:text-main-red transition-colors duration-200 cursor-pointer"
                     >
-                      <Replay10
-                        // Ícones ainda menores para 'xs'
-                        sx={{ fontSize: { xs: 20, sm: 24, md: 32 } }}
-                      />
+                      <Replay10 sx={{ fontSize: { xs: 20, sm: 24, md: 32 } }} />
                     </button>
 
                     <button
@@ -611,7 +614,6 @@ export default function EpisodePage() {
                       />
                     </button>
 
-                    {/* Controles de Volume */}
                     <div className="flex items-center space-x-1 sm:space-x-1 md:space-x-2">
                       <button
                         onClick={handleToggleMuted}
@@ -634,7 +636,6 @@ export default function EpisodePage() {
                         step="any"
                         value={volume}
                         onChange={handleVolumeChange}
-                        // Barra de volume mais curta em 'xs'
                         className="w-10 sm:w-16 md:w-24 h-1 appearance-none cursor-pointer bg-gray-600/70 rounded-lg custom-range-thumb-volume"
                         style={{
                           background: `linear-gradient(to right, #ef4444 ${
@@ -643,13 +644,11 @@ export default function EpisodePage() {
                         }}
                       />
                     </div>
-                    {/* Tempo de Reprodução */}
                     <span className="text-[0.6rem] sm:text-xs md:text-sm whitespace-nowrap">
                       {formatTime(progress * duration)} / {formatTime(duration)}
                     </span>
                   </div>
 
-                  {/* Grupo Direito de Controles (Fullscreen) */}
                   <div className="flex items-center">
                     <button
                       onClick={handleFullScreen}
@@ -671,12 +670,6 @@ export default function EpisodePage() {
             </div>
           )}
 
-          <div className="mt-3 mb-4 flex flex-col gap-2">
-            <h1 className="md:text-4xl text-2xl font-bold ">
-              {episode.order}. {episode.name}
-            </h1>
-            <p className="text-lg text-gray-700">{course.name.toUpperCase()}</p>
-          </div>
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
             <Button
               onClick={() => prevEpisode && handleNavigateEpisode(prevEpisode)}
