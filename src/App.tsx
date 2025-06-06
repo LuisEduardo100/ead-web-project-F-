@@ -4,6 +4,7 @@ import { Home } from "./pages/Home";
 import { HomeAuth } from "./pages/HomeAuth";
 import { Register } from "./pages/Register";
 import Profile from "./pages/Profile";
+import EpisodePage from "./pages/Episode";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/courses/:id" element={<CourseDetailsPage />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/episodes/:id" element={<EpisodePage />} />
     </Routes>
   );
 }
