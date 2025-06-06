@@ -1,5 +1,6 @@
 import { Header } from "../components/Header";
 import { useState } from "react";
+import axios from "axios";
 
 export function Register() {
     const [formData, setFormData] = useState({
@@ -19,10 +20,26 @@ export function Register() {
         }));
     }
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        console.log(formData);
-        // Here you would typically send the data to your backend
+        try {
+            const response = await axios.post('http://localhost:3000/auth/register', formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.status === 201) {
+                alert('Cadastro realizado com sucesso!');
+                window.location.href = '/';
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                alert(error.response?.data?.message || 'Erro ao realizar cadastro');
+            } else {
+                alert('Erro ao realizar cadastro');
+            }
+        }
     }
 
     return (
