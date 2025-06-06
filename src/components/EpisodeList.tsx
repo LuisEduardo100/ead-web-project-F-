@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import type { Episode } from "../types/Episode";
+import { useToast } from "../contexts/ToastContext";
 
 export interface EpisodeListProps {
   episodes: Episode[];
+  courseId: number;
 }
 
-export default function EpisodeList({ episodes }: EpisodeListProps) {
+export default function EpisodeList({ episodes, courseId }: EpisodeListProps) {
   const navigate = useNavigate();
-
+  const token = sessionStorage.getItem("token");
+  const { showToast } = useToast();
   const formatDuration = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -15,7 +18,15 @@ export default function EpisodeList({ episodes }: EpisodeListProps) {
   };
 
   const handleEpisodeClick = (episodeId: number) => {
-    navigate(`/episodes/${episodeId}`);
+    if (!token) {
+      showToast({
+        message: "Seja aluno para acessar o episódio",
+        type: "error",
+        duration: 1500,
+      });
+      return;
+    }
+    navigate(`/episodes/${episodeId}?courseid=${courseId}`);
   };
 
   return (

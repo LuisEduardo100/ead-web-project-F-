@@ -3,7 +3,6 @@ export interface Episode {
   name: string;
   synopsis: string;
   order: number;
-  videourl: string;
+  videoUrl: string;
   secondsLong: number;
 }
-

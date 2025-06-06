@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/common/Button";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
-import EpisodeList from "../components/Episodes";
 import { Header } from "../components/Header";
 import { HeaderAuth } from "../components/HeaderAuth";
 import {
@@ -15,6 +14,7 @@ import {
 } from "../services/courseService";
 import type { CourseDetails } from "../types/Course";
 import { useToast } from "../contexts/ToastContext";
+import EpisodeList from "../components/EpisodeList";
 
 export default function CourseDetailsPage() {
   const { showToast } = useToast();
@@ -159,27 +159,27 @@ export default function CourseDetailsPage() {
           <div className="flex items-center gap-4 mb-4">
             {token && (
               <>
-                <button
+                <Button
                   onClick={handleLikeClick}
-                  className={`bg-main-red text-white px-4 py-2 rounded ${
+                  className={`bg-main-red text-white px-4 py-2 ${
                     isLiked
                       ? "bg-yellow-500 text-white"
                       : "bg-gray-300 text-gray-700 hover:bg-main-red-hover"
                   }`}
                 >
                   {isLiked ? "Curtido" : "Curtir"}
-                </button>
+                </Button>
 
-                <button
+                <Button
                   onClick={handleFavoriteClick}
-                  className={`bg-main-red text-white px-4 py-2 rounded ${
+                  className={`bg-main-red text-white px-4 py-2 ${
                     isFavorited
                       ? "bg-yellow-500 text-white"
                       : "bg-gray-300 text-gray-700 hover:bg-main-red-hover"
                   }`}
                 >
                   {isFavorited ? "Favorito" : "Favoritar"}
-                </button>
+                </Button>
               </>
             )}
             {!token && (
@@ -194,7 +194,7 @@ export default function CourseDetailsPage() {
               Episódios do curso: {course?.episodes.length}
             </h2>
             {course.episodes && course.episodes.length > 0 && (
-              <EpisodeList episodes={course.episodes} />
+              <EpisodeList episodes={course.episodes} courseId={course.id} />
             )}
           </div>
         </div>
