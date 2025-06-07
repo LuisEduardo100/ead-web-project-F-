@@ -25,11 +25,10 @@ function CategoryBar({
     );
   }
 
-  console.log(categories);
   const itemsToDisplay: Category[] = hasFavorites
     ? [{ id: favoritesId, name: "Favoritos", position: -1 }, ...categories]
     : [...categories];
-  console.log(itemsToDisplay);
+
   return (
     <div className="w-full overflow-x-auto whitespace-nowrap py-3 mb-6 border-b border-gray-200 hide-scrollbar">
       {itemsToDisplay.map((category) => (

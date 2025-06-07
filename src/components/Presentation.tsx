@@ -1,9 +1,11 @@
+import heroImage from "../assets/hero_presentation.jpg";
+
 export function Presentation() {
   return (
     <div
       className="relative h-[400px] mb-10 bg-cover bg-center bg-no-repeat rounded-2xl fade-in-slide"
       style={{
-        backgroundImage: "url('src/assets/hero_presentation.jpg')",
+        backgroundImage: `url(${heroImage})`,
         animationDelay: `300ms`,
       }}
     >
