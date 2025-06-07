@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export function HeaderAuth() {
+function HeaderAuth() {
   const navigate = useNavigate();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
@@ -82,3 +82,5 @@ export function HeaderAuth() {
     </header>
   );
 }
+
+export default memo(HeaderAuth);

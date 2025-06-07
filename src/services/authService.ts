@@ -1,14 +1,13 @@
 import { api } from "../api/axios";
 
-// interface RegisterParams {
-//     firstName: string;
-//     lastName: string;
-//     serie: string;
-//     phone: string;
-//     birth: string;
-//     email: string;
-//     password: string;
-// }
+export interface RegisterParams {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  birth: string;
+  email: string;
+  password: string;
+}
 
 interface LoginParams {
   email: string;
@@ -25,6 +24,11 @@ export async function login(params: LoginParams) {
   return response;
 }
 
-// export async function register(params: RegisterParams) {
-
-// }
+export async function register(params: RegisterParams) {
+  const response = await api.post("/auth/register", params, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response;
+}

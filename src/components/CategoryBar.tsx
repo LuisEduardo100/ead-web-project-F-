@@ -1,19 +1,38 @@
 import type { Category } from "../types/Category";
-
+import { memo } from "react";
 interface CategoryBarProps {
   categories: Category[];
   selectedCategory: number | null;
   onSelectCategory: (categoryId: number) => void;
+  error: string | null;
+  hasFavorites: boolean;
+  favoritesId: number;
 }
 
-export function CategoryBar({
+function CategoryBar({
   categories,
   selectedCategory,
   onSelectCategory,
+  error,
+  hasFavorites,
+  favoritesId,
 }: CategoryBarProps) {
+  if (error) {
+    return (
+      <div className="text-center p-3 mb-6 text-red-600">
+        Erro ao carregar categorias: {error}
+      </div>
+    );
+  }
+
+  console.log(categories);
+  const itemsToDisplay: Category[] = hasFavorites
+    ? [{ id: favoritesId, name: "Favoritos", position: -1 }, ...categories]
+    : [...categories];
+  console.log(itemsToDisplay);
   return (
     <div className="w-full overflow-x-auto whitespace-nowrap py-3 mb-6 border-b border-gray-200 hide-scrollbar">
-      {categories.map((category) => (
+      {itemsToDisplay.map((category) => (
         <button
           key={category.id}
           onClick={() => onSelectCategory(category.id)}
@@ -32,3 +51,5 @@ export function CategoryBar({
     </div>
   );
 }
+
+export default memo(CategoryBar);

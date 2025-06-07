@@ -1,9 +1,11 @@
 import { Header } from "../components/Header";
 import { useState } from "react";
-import axios from "axios";
+import { register, type RegisterParams } from "../services/authService";
+import { useToast } from "../contexts/ToastContext";
+import { useNavigate } from "react-router-dom";
 
 export function Register() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterParams>({
     firstName: "",
     lastName: "",
     phone: "",
@@ -11,6 +13,9 @@ export function Register() {
     email: "",
     password: "",
   });
+
+  const { showToast } = useToast();
+  const navigate = useNavigate();
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -22,42 +27,57 @@ export function Register() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.phone ||
+      !formData.birth ||
+      !formData.email ||
+      !formData.password
+    ) {
+      showToast({
+        message: "Por favor, preencha todos os campos.",
+        type: "error",
+      });
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      showToast({
+        message: "Por favor, insira um e-mail válido.",
+        type: "error",
+      });
+      return;
+    }
+
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/register",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await register(formData);
 
       if (response.status === 201) {
-        alert("Cadastro realizado com sucesso!");
-        window.location.href = "/";
+        showToast({
+          message: "Cadastro realizado com sucesso!",
+          type: "success",
+        });
+        navigate("/");
       }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        alert(error.response?.data?.message || "Erro ao realizar cadastro");
-      } else {
-        alert("Erro ao realizar cadastro");
-      }
+    } catch {
+      showToast({ message: "Erro ao realizar cadastro", type: "error" });
     }
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className=" min-h-screen flex flex-col">
       <Header />
-      <section className="bg-gray-50 flex-grow py-6">
-        <div className="max-w-2xl mx-auto px-3">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">
+      <section className="bg-gray-50 flex-grow py-6 flex items-center justify-center">
+        <div className=" mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-lg shadow-xl p-8 sm:p-10">
+            <h1 className="text-3xl font-extrabold text-gray-800 mb-8 text-center">
               Criar sua conta
             </h1>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label
                     htmlFor="firstName"
@@ -71,7 +91,7 @@ export function Register() {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-main-red focus:ring-main-red p-2" // Cores do foco e padding
                     required
                   />
                 </div>
@@ -88,12 +108,11 @@ export function Register() {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-main-red focus:ring-main-red p-2"
                     required
                   />
                 </div>
               </div>
-
               <div>
                 <label
                   htmlFor="phone"
@@ -107,11 +126,10 @@ export function Register() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-main-red focus:ring-main-red p-2"
                   required
                 />
               </div>
-
               <div>
                 <label
                   htmlFor="birth"
@@ -119,17 +137,18 @@ export function Register() {
                 >
                   Data de Nascimento
                 </label>
-                <input
-                  type="date"
-                  id="birth"
-                  name="birth"
-                  value={formData.birth}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  required
-                />
+                <div className="relative mt-1">
+                  <input
+                    type="date"
+                    id="birth"
+                    name="birth"
+                    value={formData.birth}
+                    onChange={handleInputChange}
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-main-red focus:ring-main-red p-2"
+                    required
+                  />
+                </div>
               </div>
-
               <div>
                 <label
                   htmlFor="email"
@@ -143,11 +162,10 @@ export function Register() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-main-red focus:ring-main-red p-2"
                   required
                 />
               </div>
-
               <div>
                 <label
                   htmlFor="password"
@@ -161,15 +179,14 @@ export function Register() {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-main-red focus:ring-main-red p-2"
                   required
                 />
               </div>
-
-              <div className="flex items-center justify-between pt-4">
+              <div className="flex items-center justify-between pt-6">
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 w-full"
+                  className="cursor-pointer bg-main-red text-white px-6 py-3 rounded-md hover:bg-main-red-hover focus:outline-none focus:ring-2 focus:ring-main-red focus:ring-offset-2 w-full text-lg font-semibold transition-colors duration-200" // Cores, padding, fonte e transição
                 >
                   Cadastrar
                 </button>

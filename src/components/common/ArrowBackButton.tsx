@@ -3,15 +3,20 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface ArrowBackButtonProps {
   token?: string | null;
+  url?: string | null;
 }
 
-export default function ArrowBackButton({ token }: ArrowBackButtonProps) {
+export default function ArrowBackButton({ token, url }: ArrowBackButtonProps) {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
     if (!token) {
       navigate("/");
     } else {
+      if (url) {
+        navigate(url);
+        return;
+      }
       navigate(-1);
     }
   };

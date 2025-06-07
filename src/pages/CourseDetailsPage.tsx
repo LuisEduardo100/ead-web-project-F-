@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import { Header } from "../components/Header";
-import { HeaderAuth } from "../components/HeaderAuth";
 import {
   favoriteCourse,
   getCourseDetails,
@@ -17,6 +16,7 @@ import EpisodeList from "../components/EpisodeList";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
 import ArrowBackButton from "../components/common/ArrowBackButton";
+import HeaderAuth from "../components/HeaderAuth";
 
 export default function CourseDetailsPage() {
   const { showToast } = useToast();
@@ -143,7 +143,7 @@ export default function CourseDetailsPage() {
             />
           </div>
           <div className="flex items-center gap-3 md:gap-4 mb-4">
-            <ArrowBackButton token={token} />
+            <ArrowBackButton token={token} url={`/home`} />
             <h1 className="text-2xl md:text-4xl font-bold leading-tight">
               {course.name}
             </h1>
