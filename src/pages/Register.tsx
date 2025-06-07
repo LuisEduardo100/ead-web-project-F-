@@ -1,6 +1,6 @@
 import { Header } from "../components/Header";
 import { useState } from "react";
-import { register, type RegisterParams } from "../services/authService";
+import { login, register, type RegisterParams } from "../services/authService";
 import { useToast } from "../contexts/ToastContext";
 import { useNavigate } from "react-router-dom";
 
@@ -53,17 +53,37 @@ export function Register() {
     }
 
     try {
-      const response = await register(formData);
+      const registerResponse = await register(formData);
 
-      if (response.status === 201) {
+      if (registerResponse.status === 201) {
         showToast({
           message: "Cadastro realizado com sucesso!",
           type: "success",
         });
-        navigate("/");
+
+        try {
+          const loginResponse = await login({
+            email: formData.email,
+            password: formData.password,
+          });
+
+          if (loginResponse.status === 200) {
+            showToast({
+              message: "Login bem-sucedido!",
+              type: "success",
+            });
+            navigate("/home");
+          }
+        } catch {
+          showToast({
+            message: `Cadastro realizado, mas erro ao realizar login automático. Por favor, faça login manualmente.`,
+            type: "error",
+          });
+          navigate("/");
+        }
       }
     } catch {
-      showToast({ message: "Erro ao realizar cadastro", type: "error" });
+      showToast({ message: "Erro ao realizar cadastro.", type: "error" });
     }
   }
 
