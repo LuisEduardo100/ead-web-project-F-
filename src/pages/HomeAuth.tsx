@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CategoryBar } from "../components/CategoryBar";
-import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import { CourseGrid } from "../components/CourseGrid";
-import { HeaderAuth } from "../components/HeaderAuth";
 import {
   getCategories,
   getCoursesByCategory,
 } from "../services/categoryService";
 import type { Category } from "../types/Category";
 import type { Course } from "../types/Course";
+import ContinueWatching from "../components/ContinueWatching";
+import CategoryBar from "../components/CategoryBar";
+import HeaderAuth from "../components/HeaderAuth";
+import { getFavoriteCourses } from "../services/favoriteService";
+
+const FAVORITES_CATEGORY_ID = -1;
 
 export function HomeAuth() {
   const navigate = useNavigate();
@@ -18,10 +21,11 @@ export function HomeAuth() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [errorCategories, setErrorCategories] = useState<string | null>(null);
   const [errorCourses, setErrorCourses] = useState<string | null>(null);
+  const [hasFavorites, setHasFavorites] = useState(false);
+  const [favoriteCourses, setFavoriteCourses] = useState<Course[]>([]);
 
   useEffect(() => {
     const authenticate = async () => {
@@ -33,14 +37,37 @@ export function HomeAuth() {
   }, [navigate, token]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
-        setLoadingCategories(true);
-        const data = await getCategories();
-        setCategories(data.categories);
+        let fetchedFavorites: Course[] = [];
+        try {
+          const favoritesData = await getFavoriteCourses();
+          if (favoritesData.courses && favoritesData.courses.length > 0) {
+            setHasFavorites(true);
+            fetchedFavorites = favoritesData.courses;
+            setFavoriteCourses(favoritesData.courses);
+          } else {
+            setHasFavorites(false);
+            setFavoriteCourses([]);
+          }
+        } catch (favErr) {
+          console.error(
+            "Erro ao buscar cursos favoritos (na inicialização):",
+            favErr
+          );
+          setHasFavorites(false);
+          setFavoriteCourses([]);
+        }
 
-        if (data.categories.length > 0) {
-          setSelectedCategory(data.categories[0].id);
+        const categoriesData = await getCategories();
+        setCategories(categoriesData.categories);
+
+        if (fetchedFavorites.length > 0) {
+          setSelectedCategory(FAVORITES_CATEGORY_ID);
+        } else if (categoriesData.categories.length > 0) {
+          setSelectedCategory(categoriesData.categories[0].id);
+        } else {
+          setSelectedCategory(null);
         }
       } catch (err) {
         if (err instanceof Error) {
@@ -48,12 +75,10 @@ export function HomeAuth() {
         } else {
           setErrorCategories("Erro ao carregar categorias.");
         }
-      } finally {
-        setLoadingCategories(false);
       }
     };
 
-    fetchCategories();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -66,8 +91,15 @@ export function HomeAuth() {
       try {
         setLoadingCourses(true);
         setErrorCourses(null);
-        const data = await getCoursesByCategory(selectedCategory);
-        setCourses(data.courses);
+
+        let dataCourses: Course[];
+        if (selectedCategory === FAVORITES_CATEGORY_ID) {
+          dataCourses = favoriteCourses;
+        } else {
+          const data = await getCoursesByCategory(selectedCategory);
+          dataCourses = data.courses;
+        }
+        setCourses(dataCourses);
       } catch (err) {
         if (err instanceof Error) {
           setErrorCourses(err.message);
@@ -80,41 +112,31 @@ export function HomeAuth() {
     };
 
     fetchCourses();
-  }, [selectedCategory]);
+  }, [selectedCategory, favoriteCourses]);
 
-  const handleSelectCategory = (categoryId: number) => {
+  const handleSelectCategory = useCallback((categoryId: number) => {
     setSelectedCategory(categoryId);
-  };
+  }, []);
 
-  if (loadingCategories || loadingCourses) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <LoadingSpinner size="large" />
-      </div>
-    );
-  }
   return (
     <div className="min-h-screen flex flex-col">
       <HeaderAuth />
       <section className="bg-gray-50 flex-grow py-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {loadingCategories ? (
-            <div className="flex justify-center items-center py-10">
-              <LoadingSpinner size="large" />
-            </div>
-          ) : errorCategories ? (
-            <div className="text-center p-8 text-red-600">
-              Erro ao carregar categorias: {errorCategories}
-            </div>
-          ) : (
-            <CategoryBar
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onSelectCategory={handleSelectCategory}
-            />
-          )}
-
-          <CourseGrid courses={courses} error={errorCourses} />
+          <ContinueWatching />
+          <CategoryBar
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={handleSelectCategory}
+            error={errorCategories}
+            hasFavorites={hasFavorites}
+            favoritesId={FAVORITES_CATEGORY_ID}
+          />
+          <CourseGrid
+            courses={courses}
+            error={errorCourses}
+            loading={loadingCourses}
+          />
         </div>
       </section>
     </div>

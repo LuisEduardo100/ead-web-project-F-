@@ -80,7 +80,11 @@ export default function UserProfile() {
   };
 
   if (isLoading) {
-    return <LoadingSpinner size="large" />;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner size="large" />
+      </div>
+    );
   }
 
   if (!user) {
@@ -91,7 +95,7 @@ export default function UserProfile() {
     );
   }
   return (
-    <div className="container max-w-6xl mx-auto p-4 md:p-8 max-w-4xl bg-white">
+    <div className="container max-w-6xl mx-auto p-4 md:p-8 bg-white">
       <div className="flex items-center mb-6 gap-2">
         <ArrowBackButton token={token} />
         <h1 className="text-main-red text-3xl font-bold">Meu Perfil</h1>

@@ -12,3 +12,8 @@ export interface CourseDetails extends Course {
   liked: boolean;
   episodes: Episode[];
 }
+
+export interface FavoriteCoursesResponse {
+  userId: number;
+  courses: Course[];
+}

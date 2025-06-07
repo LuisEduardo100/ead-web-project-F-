@@ -1,4 +1,5 @@
 import { api } from "../api/axios";
+import type { EpisodeWatching } from "../types/Episode";
 
 interface WatchTimeResponse {
   seconds: number;
@@ -57,5 +58,23 @@ export async function setEpisodeWatchTime(
   } catch (error) {
     console.error("Erro ao definir watch time do episódio:", error);
     return false;
+  }
+}
+
+export async function getWatchingEpisode(): Promise<EpisodeWatching | null> {
+  const token = sessionStorage.getItem("token");
+  try {
+    const response = await api.get<EpisodeWatching[]>(
+      "/users/current/watching",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data.length > 0 ? response.data[0] : null;
+  } catch (error) {
+    console.error("Erro ao buscar episódio em andamento:", error);
+    throw error;
   }
 }

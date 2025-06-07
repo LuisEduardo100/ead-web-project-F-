@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { HeaderAuth } from "../components/HeaderAuth";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import Button from "../components/common/Button";
 import {
@@ -24,7 +23,8 @@ import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import Replay10 from "@mui/icons-material/Replay10";
 import Forward10 from "@mui/icons-material/Forward10";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowBackButton from "../components/common/ArrowBackButton";
+import HeaderAuth from "../components/HeaderAuth";
 
 export default function EpisodePage() {
   const navigate = useNavigate();
@@ -483,12 +483,7 @@ export default function EpisodePage() {
       <div className="bg-gray-50" style={{ minHeight: "calc(100vh - 58px)" }}>
         <div className="max-w-6xl py-6 container mx-auto p-4">
           <div className="flex items-center gap-3 mb-4">
-            <button
-              onClick={() => navigate(`/courses/${course.id}`)}
-              className="cursor-pointer p-2 rounded-full text-gray-700 hover:bg-gray-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
-            >
-              <ArrowBackIcon sx={{ fontSize: { xs: 24, sm: 28, md: 32 } }} />{" "}
-            </button>
+            <ArrowBackButton url={`/courses/${course.id}`} token={token} />
             <h1 className="md:text-4xl sm:text-2xl xs:text-lg font-bold ">
               {episode.order}. {episode.name}{" "}
             </h1>
